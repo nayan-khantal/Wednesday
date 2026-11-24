@@ -273,12 +273,4 @@ Instead of simply responding to user instructions, Wednesday aims to understand 
 
 ---
 
-##  Author
-
-**Varenya Prasad**
-
-GitHub: https://github.com/YOUR_USERNAME
-
----
-
 *Built with Python, Groq, LangChain, MCP, and open-source voice technologies.*
