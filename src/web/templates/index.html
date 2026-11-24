@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wednesday</title>
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Highlight.js for code blocks -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <!-- Marked.js for markdown -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            google: ['"Google Sans"', '"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            geminiBg: '#131314',
+            geminiSidebar: '#1e1f20',
+            geminiPill: '#1e1f20',
+            geminiHover: '#282a2c',
+            geminiActive: '#333537',
+            geminiBorder: '#37393b',
+            geminiText: '#e3e3e3',
+            geminiSubtext: '#c4c7c5',
+            geminiMuted: '#8e918f',
+            geminiBlue: '#a8c7fa',
+            geminiBlueLight: '#d3e3fd',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #131314;
+      color: #e3e3e3;
+      font-family: "Google Sans", "Plus Jakarta Sans", sans-serif;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #37393b;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #505256;
+    }
+
+    /* Gemini signature gradient text */
+    .gemini-gradient-text {
+      background: linear-gradient(74deg, #4285f4 0%, #9b72cb 25%, #d96570 50%, #d96570 70%, #ffffff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gemini-pill-gradient {
+      background: linear-gradient(135deg, rgba(66, 133, 244, 0.15) 0%, rgba(155, 114, 203, 0.15) 100%);
+    }
+
+    /* Gemini prose typography */
+    .prose-gemini {
+      color: #e3e3e3;
+      font-size: 0.965rem;
+      line-height: 1.7;
+    }
+    .prose-gemini p {
+      margin-bottom: 0.85rem;
+    }
+    .prose-gemini p:last-child {
+      margin-bottom: 0;
+    }
+    .prose-gemini code:not(pre code) {
+      background: #282a2c;
+      color: #c4c7c5;
+      padding: 0.2rem 0.45rem;
+      border-radius: 0.35rem;
+      font-size: 0.875em;
+      font-family: "JetBrains Mono", monospace;
+    }
+    .prose-gemini pre {
+      background: #1e1f20 !important;
+      border: 1px solid #37393b;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+      overflow: hidden;
+    }
+    .prose-gemini pre code {
+      padding: 1rem;
+      display: block;
+      background: transparent !important;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+    .prose-gemini ul {
+      list-style-type: disc;
+      padding-left: 1.5rem;
+      margin-bottom: 0.85rem;
+    }
+    .prose-gemini ol {
+      list-style-type: decimal;
+      padding-left: 1.5rem;
+      margin-bottom: 0.85rem;
+    }
+    .prose-gemini li {
+      margin-bottom: 0.35rem;
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex overflow-hidden bg-[#131314] text-[#e3e3e3]">
+
+  <!-- SVG Gradient Definition for Gemini Sparkle -->
+  <svg width="0" height="0" class="absolute">
+    <defs>
+      <linearGradient id="gemini-sparkle-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#4285F4"/>
+        <stop offset="50%" stop-color="#9B72CB"/>
+        <stop offset="100%" stop-color="#D96570"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- ======================================================== -->
+  <!-- 1. GEMINI COLLAPSIBLE SIDEBAR -->
+  <!-- ======================================================== -->
+  <aside id="sidebar" class="w-72 bg-[#1e1f20] flex flex-col justify-between shrink-0 transition-all duration-300 ease-in-out border-r border-[#282a2c] z-30 select-none">
+    
+    <!-- Top Part -->
+    <div class="p-3.5 space-y-4">
+      <!-- Hamburger & New Chat Row -->
+      <div class="flex items-center justify-between px-1">
+        <button id="sidebarToggle" title="Collapse menu" class="p-2.5 rounded-full hover:bg-[#282a2c] text-[#c4c7c5] transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- New Chat Button (Gemini Pill) -->
+      <button id="newChatBtn" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-full bg-[#131314] hover:bg-[#282a2c] text-[#e3e3e3] border border-[#37393b] text-sm font-medium transition-all shadow-sm">
+        <svg class="w-4 h-4 text-[#a8c7fa]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        <span class="tracking-wide">New chat</span>
+      </button>
+
+      <!-- Recent Conversations Header -->
+      <div class="pt-2 px-3">
+        <span class="text-xs font-semibold text-[#8e918f] tracking-wide">Recent</span>
+      </div>
+
+      <!-- Recents List (Populated dynamically) -->
+      <div id="recentChatsList" class="space-y-1 max-h-[calc(100vh-320px)] overflow-y-auto px-1">
+        <div class="px-3 py-2 text-xs text-[#8e918f]">Loading recent chats...</div>
+      </div>
+    </div>
+
+    <!-- Bottom Part: Tools & User Info -->
+    <div class="p-3 border-t border-[#282a2c] space-y-1.5">
+      <!-- Tool Drawer Trigger -->
+      <button id="openToolsBtn" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-[#282a2c] text-xs text-[#c4c7c5] transition-colors">
+        <div class="flex items-center space-x-2.5">
+          <svg class="w-4 h-4 text-[#a8c7fa]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span class="font-medium">Connected Tools</span>
+        </div>
+        <span id="sidebarToolsCount" class="px-2 py-0.5 rounded-full bg-[#131314] text-[11px] font-mono text-[#a8c7fa]">28</span>
+      </button>
+
+      <!-- User Account Row (Varenya) -->
+      <div class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl hover:bg-[#282a2c] text-xs transition-colors">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs shrink-0">
+          V
+        </div>
+        <div class="truncate">
+          <div class="font-medium text-[#e3e3e3] truncate">Varenya Prasad</div>
+          <div class="text-[11px] text-[#8e918f]">Cherry (Primary User)</div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ======================================================== -->
+  <!-- 2. MAIN GEMINI CONTENT AREA -->
+  <!-- ======================================================== -->
+  <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+
+    <!-- Top Navigation Header (Gemini Model Switcher) -->
+    <header class="h-16 px-5 flex items-center justify-between shrink-0 select-none z-10">
+      
+      <!-- Left: Mobile Hamburger & Model Pill -->
+      <div class="flex items-center space-x-3">
+        <button id="mobileSidebarToggle" class="p-2 rounded-full hover:bg-[#1e1f20] text-[#c4c7c5] md:hidden">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+
+        <!-- Gemini-style Model Selector Pill -->
+        <div class="flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#1e1f20] border border-[#37393b] text-sm hover:bg-[#282a2c] cursor-pointer transition-colors">
+          <span class="font-medium text-[#e3e3e3]">Wednesday</span>
+          <span class="text-xs text-[#a8c7fa] font-mono">120B (Groq)</span>
+          <svg class="w-4 h-4 text-[#8e918f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Right: Live Tool Badges & Speech Readout -->
+      <div class="flex items-center space-x-2">
+        <div class="hidden lg:flex items-center space-x-1.5 text-xs text-[#c4c7c5]">
+          <span class="flex items-center space-x-1 px-2.5 py-1 rounded-full bg-[#1e1f20] border border-[#2d2f31]">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span>Workspace</span>
+          </span>
+          <span class="flex items-center space-x-1 px-2.5 py-1 rounded-full bg-[#1e1f20] border border-[#2d2f31]">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+            <span>Playwright</span>
+          </span>
+          <span class="flex items-center space-x-1 px-2.5 py-1 rounded-full bg-[#1e1f20] border border-[#2d2f31]">
+            <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+            <span>ADB</span>
+          </span>
+        </div>
+
+        <!-- Read Aloud Toggle -->
+        <button id="ttsToggle" title="Read responses aloud" class="p-2 rounded-full hover:bg-[#1e1f20] text-[#c4c7c5] transition-colors">
+          <svg id="ttsOffIcon" class="w-5 h-5 text-[#8e918f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+          </svg>
+          <svg id="ttsOnIcon" class="w-5 h-5 text-[#a8c7fa] hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+          </svg>
+        </button>
+      </div>
+
+    </header>
+
+    <!-- Scrollable Chat Stream Container -->
+    <div id="chatScrollArea" class="flex-1 overflow-y-auto px-4 md:px-8 py-6 flex flex-col justify-between">
+      
+      <div class="max-w-3xl w-full mx-auto space-y-8">
+        
+        <!-- ============================================== -->
+        <!-- GEMINI SIGNATURE WELCOME HERO SCREEN           -->
+        <!-- ============================================== -->
+        <div id="geminiHero" class="my-10 space-y-8">
+          <div class="space-y-2">
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
+              <span class="gemini-gradient-text">Hello, Varenya</span>
+            </h1>
+            <p class="text-3xl md:text-4xl font-medium text-[#444746]">
+              How can I help you today?
+            </p>
+          </div>
+
+          <!-- Prompt Suggestion Cards (Gemini 2x2 Grid) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
+            
+            <div onclick="sendQuickPrompt('Play Bohemian Rhapsody on YouTube')" class="p-4 rounded-2xl bg-[#1e1f20] hover:bg-[#282a2c] cursor-pointer transition-all border border-transparent hover:border-[#37393b] flex flex-col justify-between h-32 group">
+              <p class="text-sm text-[#e3e3e3] font-medium leading-relaxed">
+                Play Bohemian Rhapsody on YouTube via Playwright
+              </p>
+              <div class="flex justify-end">
+                <span class="p-2 rounded-full bg-[#131314] text-[#a8c7fa] group-hover:scale-110 transition-transform">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </span>
+              </div>
+            </div>
+
+            <div onclick="sendQuickPrompt('Create a Python script named fibonacci.py that prints the first 10 Fibonacci numbers')" class="p-4 rounded-2xl bg-[#1e1f20] hover:bg-[#282a2c] cursor-pointer transition-all border border-transparent hover:border-[#37393b] flex flex-col justify-between h-32 group">
+              <p class="text-sm text-[#e3e3e3] font-medium leading-relaxed">
+                Create a Python script fibonacci.py for safe review
+              </p>
+              <div class="flex justify-end">
+                <span class="p-2 rounded-full bg-[#131314] text-[#a8c7fa] group-hover:scale-110 transition-transform">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                </span>
+              </div>
+            </div>
+
+            <div onclick="sendQuickPrompt('Search Google for latest tech news')" class="p-4 rounded-2xl bg-[#1e1f20] hover:bg-[#282a2c] cursor-pointer transition-all border border-transparent hover:border-[#37393b] flex flex-col justify-between h-32 group">
+              <p class="text-sm text-[#e3e3e3] font-medium leading-relaxed">
+                Search Google and summarize current tech news
+              </p>
+              <div class="flex justify-end">
+                <span class="p-2 rounded-full bg-[#131314] text-[#a8c7fa] group-hover:scale-110 transition-transform">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </span>
+              </div>
+            </div>
+
+            <div onclick="sendQuickPrompt('Check phone status')" class="p-4 rounded-2xl bg-[#1e1f20] hover:bg-[#282a2c] cursor-pointer transition-all border border-transparent hover:border-[#37393b] flex flex-col justify-between h-32 group">
+              <p class="text-sm text-[#e3e3e3] font-medium leading-relaxed">
+                Check ADB connectivity of connected Android phone
+              </p>
+              <div class="flex justify-end">
+                <span class="p-2 rounded-full bg-[#131314] text-[#a8c7fa] group-hover:scale-110 transition-transform">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Dynamic Message List -->
+        <div id="messagesContainer" class="space-y-7"></div>
+
+        <!-- Gemini Thinking Indicator -->
+        <div id="geminiThinking" class="hidden flex items-start space-x-3.5 py-2">
+          <!-- Sparkle icon -->
+          <svg class="w-5 h-5 shrink-0 mt-0.5 animate-spin" style="animation-duration: 3s;" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C12 7.52285 7.52285 12 2 12C7.52285 12 12 16.4772 12 22C12 16.4772 16.4772 12 22 12C16.4772 12 12 7.52285 12 2Z" fill="url(#gemini-sparkle-grad)"/>
+          </svg>
+          <div class="space-y-2">
+            <div class="flex items-center space-x-2">
+              <span class="text-sm font-medium gemini-gradient-text">Thinking...</span>
+            </div>
+            <div class="h-2 w-48 bg-[#1e1f20] rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 w-1/2 animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 3. GEMINI SIGNATURE PROMPT PILL (FLOATING BOTTOM INPUT)   -->
+    <!-- ======================================================== -->
+    <div class="px-4 pb-4 md:pb-6 pt-2 max-w-3xl w-full mx-auto shrink-0 select-none">
+      
+      <!-- Pending File Draft Banner -->
+      <div id="draftReviewBanner" class="hidden mb-3 p-3 rounded-2xl bg-[#1e1f20] border border-[#37393b] flex items-center justify-between text-xs shadow-lg">
+        <div class="flex items-center space-x-2.5">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+          <span class="text-[#c4c7c5]">Pending file draft: <strong id="draftBannerFilename" class="text-[#a8c7fa] font-mono">code.py</strong></span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="approveDraftAction()" class="px-3 py-1 rounded-full bg-[#a8c7fa] hover:bg-[#d3e3fd] text-[#041e49] font-medium transition-colors">Approve & Save</button>
+          <button onclick="cancelDraftAction()" class="px-3 py-1 rounded-full bg-[#282a2c] hover:bg-[#333537] text-[#c4c7c5] transition-colors">Discard</button>
+        </div>
+      </div>
+
+      <!-- The Signature Gemini Prompt Container -->
+      <form id="promptForm" class="relative rounded-3xl bg-[#1e1f20] border border-transparent focus-within:border-[#37393b] shadow-2xl transition-all">
+        
+        <div class="flex items-center px-4 py-2">
+          <!-- Textarea -->
+          <textarea
+            id="promptInput"
+            rows="1"
+            placeholder="Ask Wednesday"
+            class="flex-1 bg-transparent border-0 focus:ring-0 text-[#e3e3e3] placeholder-[#8e918f] resize-none text-[0.95rem] max-h-36 py-2 focus:outline-none"
+          ></textarea>
+
+          <!-- Input Action Buttons -->
+          <div class="flex items-center space-x-1 ml-2 shrink-0">
+            
+            <!-- Mic button -->
+            <button type="button" id="micBtn" title="Use microphone" class="p-2.5 rounded-full hover:bg-[#282a2c] text-[#c4c7c5] hover:text-[#e3e3e3] transition-colors">
+              <svg id="micStaticIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+              </svg>
+              <svg id="micActiveIcon" class="w-5 h-5 text-red-400 animate-pulse hidden" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd" />
+              </svg>
+            </button>
+
+            <!-- Send button -->
+            <button type="submit" id="sendBtn" class="p-2.5 rounded-full text-[#8e918f] hover:text-[#a8c7fa] hover:bg-[#282a2c] transition-all disabled:opacity-40">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+
+          </div>
+        </div>
+
+      </form>
+
+      <!-- Gemini Disclaimer Footnote -->
+      <div class="mt-2 text-center text-[11px] text-[#8e918f]">
+        Wednesday can make mistakes, so double-check it. Connected with Groq LLM & MCP Tools.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- 4. CONNECTED MCP TOOLS SLIDE OVER                        -->
+  <!-- ======================================================== -->
+  <div id="toolsModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex justify-end">
+    <div class="w-full max-w-md bg-[#1e1f20] h-full flex flex-col border-l border-[#37393b] shadow-2xl p-6 overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-[#2d2f31]">
+        <div>
+          <h2 class="text-lg font-semibold text-[#e3e3e3]">Connected MCP Tools</h2>
+          <p class="text-xs text-[#8e918f]">Tools currently available to Wednesday</p>
+        </div>
+        <button id="closeToolsModal" class="p-2 rounded-full hover:bg-[#282a2c] text-[#c4c7c5]">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div id="toolsModalList" class="space-y-3 mt-4 flex-1">
+        <div class="text-xs text-[#8e918f] text-center py-6">Loading tools...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- JAVASCRIPT ENGINE & UI HANDLERS                          -->
+  <!-- ======================================================== -->
+  <script>
+    const chatScrollArea = document.getElementById('chatScrollArea');
+    const geminiHero = document.getElementById('geminiHero');
+    const messagesContainer = document.getElementById('messagesContainer');
+    const geminiThinking = document.getElementById('geminiThinking');
+    const promptForm = document.getElementById('promptForm');
+    const promptInput = document.getElementById('promptInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const micBtn = document.getElementById('micBtn');
+    const micStaticIcon = document.getElementById('micStaticIcon');
+    const micActiveIcon = document.getElementById('micActiveIcon');
+    const ttsToggle = document.getElementById('ttsToggle');
+    const ttsOffIcon = document.getElementById('ttsOffIcon');
+    const ttsOnIcon = document.getElementById('ttsOnIcon');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+    const newChatBtn = document.getElementById('newChatBtn');
+    const recentChatsList = document.getElementById('recentChatsList');
+    const openToolsBtn = document.getElementById('openToolsBtn');
+    const toolsModal = document.getElementById('toolsModal');
+    const closeToolsModal = document.getElementById('closeToolsModal');
+    const toolsModalList = document.getElementById('toolsModalList');
+    const sidebarToolsCount = document.getElementById('sidebarToolsCount');
+    const draftReviewBanner = document.getElementById('draftReviewBanner');
+    const draftBannerFilename = document.getElementById('draftBannerFilename');
+
+    let speechEnabled = false;
+    let isListening = false;
+    let recognition = null;
+    let currentDraft = null;
+
+    // Auto-resize input
+    promptInput.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+      if (this.value.trim().length > 0) {
+        sendBtn.classList.remove('text-[#8e918f]');
+        sendBtn.classList.add('text-[#a8c7fa]');
+      } else {
+        sendBtn.classList.add('text-[#8e918f]');
+        sendBtn.classList.remove('text-[#a8c7fa]');
+      }
+    });
+
+    promptInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        promptForm.dispatchEvent(new Event('submit'));
+      }
+    });
+
+    // Sidebar collapse toggling
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('-ml-72');
+    });
+    mobileSidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('-ml-72');
+    });
+
+    // New Chat
+    newChatBtn.addEventListener('click', () => {
+      messagesContainer.innerHTML = '';
+      geminiHero.classList.remove('hidden');
+      currentDraft = null;
+      updateDraftBanner(null);
+    });
+
+    // Tools Modal
+    openToolsBtn.addEventListener('click', () => toolsModal.classList.remove('hidden'));
+    closeToolsModal.addEventListener('click', () => toolsModal.classList.add('hidden'));
+    toolsModal.addEventListener('click', (e) => {
+      if (e.target === toolsModal) toolsModal.classList.add('hidden');
+    });
+
+    // Read aloud toggle
+    ttsToggle.addEventListener('click', () => {
+      speechEnabled = !speechEnabled;
+      if (speechEnabled) {
+        ttsOffIcon.classList.add('hidden');
+        ttsOnIcon.classList.remove('hidden');
+      } else {
+        ttsOffIcon.classList.remove('hidden');
+        ttsOnIcon.classList.add('hidden');
+        window.speechSynthesis.cancel();
+      }
+    });
+
+    function speakGemini(text) {
+      if (!speechEnabled || !('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.pitch = 0.9;
+      utterance.rate = 1.0;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Voice recognition
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => {
+        isListening = true;
+        micStaticIcon.classList.add('hidden');
+        micActiveIcon.classList.remove('hidden');
+      };
+
+      recognition.onresult = (event) => {
+        promptInput.value = event.results[0][0].transcript;
+        promptInput.dispatchEvent(new Event('input'));
+      };
+
+      recognition.onerror = () => stopListening();
+      recognition.onend = () => stopListening();
+
+      micBtn.addEventListener('click', () => {
+        if (!isListening) {
+          try { recognition.start(); } catch(e) {}
+        } else {
+          recognition.stop();
+        }
+      });
+    }
+
+    function stopListening() {
+      isListening = false;
+      micStaticIcon.classList.remove('hidden');
+      micActiveIcon.classList.add('hidden');
+    }
+
+    function scrollToBottom() {
+      chatScrollArea.scrollTo({
+        top: chatScrollArea.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+
+    function sendQuickPrompt(text) {
+      promptInput.value = text;
+      promptInput.dispatchEvent(new Event('input'));
+      promptForm.dispatchEvent(new Event('submit'));
+    }
+
+    // Append Message in Gemini Style
+    function appendGeminiMessage(role, text, draft = null) {
+      geminiHero.classList.add('hidden');
+      const row = document.createElement('div');
+
+      if (role === 'user') {
+        // User Message: Gemini right-aligned clean bubble
+        row.className = 'flex justify-end';
+        row.innerHTML = `
+          <div class="max-w-[85%] md:max-w-xl px-5 py-3.5 rounded-3xl bg-[#282a2c] text-[#e3e3e3] text-[0.95rem] leading-relaxed shadow-sm">
+            <div class="whitespace-pre-wrap">${escapeHtml(text)}</div>
+          </div>
+        `;
+      } else {
+        // Assistant Message: Gemini Sparkle + Clean Left Layout
+        row.className = 'flex items-start space-x-3.5';
+        const parsed = marked.parse(text || "");
+
+        let draftCardHtml = "";
+        if (draft) {
+          currentDraft = draft;
+          updateDraftBanner(draft);
+          draftCardHtml = `
+            <div class="mt-4 rounded-2xl border border-[#37393b] bg-[#1e1f20] overflow-hidden shadow-xl">
+              <div class="px-4 py-2.5 bg-[#282a2c] border-b border-[#37393b] flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs font-mono font-medium text-[#a8c7fa]">${escapeHtml(draft.filename)}</span>
+                  <span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-950/60 text-amber-300 border border-amber-800/40">Review Needed</span>
+                </div>
+                <div class="flex items-center space-x-2 text-xs">
+                  <button onclick="approveDraftAction()" class="px-3 py-1 rounded-full bg-[#a8c7fa] hover:bg-[#d3e3fd] text-[#041e49] font-medium transition-colors">
+                    Approve & Save
+                  </button>
+                  <button onclick="cancelDraftAction()" class="px-3 py-1 rounded-full bg-[#37393b] hover:bg-[#45474a] text-[#c4c7c5] transition-colors">
+                    Discard
+                  </button>
+                </div>
+              </div>
+              <pre class="m-0 p-3 text-xs font-mono bg-[#18181b] text-[#e3e3e3] overflow-x-auto max-h-80"><code>${escapeHtml(draft.content)}</code></pre>
+            </div>
+          `;
+        }
+
+        row.innerHTML = `
+          <svg class="w-6 h-6 shrink-0 mt-1" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C12 7.52285 7.52285 12 2 12C7.52285 12 12 16.4772 12 22C12 16.4772 16.4772 12 22 12C16.4772 12 12 7.52285 12 2Z" fill="url(#gemini-sparkle-grad)"/>
+          </svg>
+          <div class="flex-1 min-w-0">
+            <div class="prose-gemini">${parsed}</div>
+            ${draftCardHtml}
+            <!-- Gemini Action Bar (Copy button) -->
+            <div class="mt-3 flex items-center space-x-2 text-[#8e918f]">
+              <button onclick="copyToClipboard(this)" data-text="${escapeHtml(text)}" title="Copy text" class="p-1.5 rounded-full hover:bg-[#282a2c] hover:text-[#e3e3e3] transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      messagesContainer.appendChild(row);
+      row.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightElement(block);
+      });
+      scrollToBottom();
+    }
+
+    function updateDraftBanner(draft) {
+      if (draft) {
+        draftBannerFilename.textContent = draft.filename;
+        draftReviewBanner.classList.remove('hidden');
+      } else {
+        draftReviewBanner.classList.add('hidden');
+      }
+    }
+
+    function copyToClipboard(button) {
+      const text = button.getAttribute('data-text');
+      navigator.clipboard.writeText(text).then(() => {
+        button.classList.add('text-[#a8c7fa]');
+        setTimeout(() => button.classList.remove('text-[#a8c7fa]'), 1500);
+      });
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Submit handler
+    promptForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const message = promptInput.value.trim();
+      if (!message) return;
+
+      appendGeminiMessage('user', message);
+      promptInput.value = '';
+      promptInput.style.height = 'auto';
+      sendBtn.classList.add('text-[#8e918f]');
+      sendBtn.classList.remove('text-[#a8c7fa]');
+
+      geminiThinking.classList.remove('hidden');
+      scrollToBottom();
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message }),
+        });
+
+        const data = await response.json();
+        geminiThinking.classList.add('hidden');
+
+        if (data.type === 'draft_saved' || data.type === 'draft_cancelled') {
+          currentDraft = null;
+          updateDraftBanner(null);
+        }
+
+        appendGeminiMessage('assistant', data.text, data.draft);
+        speakGemini(data.text);
+
+      } catch (err) {
+        geminiThinking.classList.add('hidden');
+        appendGeminiMessage('assistant', `Connection error: ${err.message}`);
+      }
+    });
+
+    // Draft Actions
+    async function approveDraftAction() {
+      geminiThinking.classList.remove('hidden');
+      try {
+        const res = await fetch('/api/draft/action', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'approve' }),
+        });
+        const data = await res.json();
+        geminiThinking.classList.add('hidden');
+        currentDraft = null;
+        updateDraftBanner(null);
+        appendGeminiMessage('assistant', data.message || "File saved successfully.");
+      } catch(e) {
+        geminiThinking.classList.add('hidden');
+        appendGeminiMessage('assistant', `Failed to approve draft: ${e.message}`);
+      }
+    }
+
+    async function cancelDraftAction() {
+      geminiThinking.classList.remove('hidden');
+      try {
+        const res = await fetch('/api/draft/action', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'cancel' }),
+        });
+        const data = await res.json();
+        geminiThinking.classList.add('hidden');
+        currentDraft = null;
+        updateDraftBanner(null);
+        appendGeminiMessage('assistant', data.message || "Draft discarded.");
+      } catch(e) {
+        geminiThinking.classList.add('hidden');
+        appendGeminiMessage('assistant', `Failed to cancel draft: ${e.message}`);
+      }
+    }
+
+    // Initial Data Fetch
+    async function init() {
+      try {
+        // Load history
+        const histRes = await fetch('/api/history');
+        const histData = await histRes.json();
+        if (histData.history && histData.history.length > 0) {
+          recentChatsList.innerHTML = '';
+          const userMessages = histData.history.filter(m => m.role === 'human' || m.role === 'user');
+          
+          userMessages.slice(-12).reverse().forEach(item => {
+            const btn = document.createElement('button');
+            btn.className = 'w-full text-left px-3 py-2 rounded-xl text-xs text-[#c4c7c5] hover:bg-[#282a2c] hover:text-[#e3e3e3] truncate transition-colors';
+            btn.textContent = item.content;
+            btn.onclick = () => {
+              promptInput.value = item.content;
+              promptInput.dispatchEvent(new Event('input'));
+            };
+            recentChatsList.appendChild(btn);
+          });
+
+          // Show initial messages on screen
+          histData.history.forEach(item => {
+            appendGeminiMessage(item.role === 'human' || item.role === 'user' ? 'user' : 'assistant', item.content);
+          });
+        }
+
+        // Load tools
+        const toolsRes = await fetch('/api/tools');
+        const toolsData = await toolsRes.json();
+        if (toolsData.tools) {
+          sidebarToolsCount.textContent = toolsData.tools.length;
+          toolsModalList.innerHTML = '';
+          toolsData.tools.forEach(tool => {
+            const card = document.createElement('div');
+            card.className = 'p-3 rounded-xl bg-[#131314] border border-[#2d2f31] space-y-1';
+            card.innerHTML = `
+              <div class="font-mono text-xs font-semibold text-[#a8c7fa]">${escapeHtml(tool.name)}</div>
+              <p class="text-xs text-[#8e918f] leading-relaxed">${escapeHtml(tool.description || 'No description.')}</p>
+            `;
+            toolsModalList.appendChild(card);
+          });
+        }
+      } catch (e) {
+        console.error("Initialization error:", e);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
